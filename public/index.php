@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/functions.php';
 $movies = getAllMovies();
+$id = $_GET['id'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +15,7 @@ $movies = getAllMovies();
     <div class="movies">
         <?php foreach ($movies as $movie): ?>
             <div class="movie-card">
-                <img src="../assets/posters/<?= htmlspecialchars($movie['poster']) ?>" alt="<?= htmlspecialchars($movie['title']) ?>" />
+                <img src="assets/posters/<?= htmlspecialchars($movie['poster']) ?>.jpg" alt="<?= htmlspecialchars($movie['title']) ?>" />
                 <h2><?= htmlspecialchars($movie['title']) ?></h2>
                 <p>Genre: <?= htmlspecialchars($movie['genre']) ?></p>
                 <p>Duration: <?= htmlspecialchars($movie['duration']) ?> min</p>

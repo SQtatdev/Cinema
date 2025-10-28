@@ -12,6 +12,7 @@ $sessions = getSessionsByMovie($id);
 <head>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($movie['title']) ?></title>
+    <img src="assets/posters/<?= $id ?>.jpg" />
     <link rel="stylesheet" href="style.css">
 </head>
 <body>

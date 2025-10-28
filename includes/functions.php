@@ -1,6 +1,7 @@
 <?php
 require_once 'db.php';
 
+
 function getMovieById($id) {
     global $pdo;
     $stmt = $pdo->prepare("SELECT * FROM movies WHERE id = ?");
@@ -22,11 +23,4 @@ function getSessionsByMovie($movie_id) {
                            ORDER BY s.show_time ASC");
     $stmt->execute([$movie_id]);
     return $stmt->fetchAll();
-}
-
-function getPosterByid($id) {
-    global $pdo;
-    $stmt = $pdo->prepare("SELECT poster FROM movies WHERE id = ?");
-    $stmt->execute([$id]);
-    return $stmt->fetch();
 }
