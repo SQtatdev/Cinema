@@ -1,0 +1,51 @@
+body {
+            background-color: #0e0e0e;
+            color: #f1f1f1;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .booking-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(255,123,0,0.2);
+        }
+        h1 {
+            color: #ff7b00;
+            font-weight: 600;
+        }
+        label {
+            color: #ccc;
+        }
+        input, select {
+            background: #111 !important;
+            color: #fff !important;
+            border: 1px solid #333 !important;
+        }
+        input:focus, select:focus {
+            border-color: #ff7b00 !important;
+            box-shadow: 0 0 5px rgba(255,123,0,0.5);
+        }
+        .btn-orange {
+            background-color: #ff7b00;
+            color: white;
+            border: none;
+        }
+        .btn-orange:hover {
+            background-color: #e46a00;
+        }
+        .summary-box {
+            background: #111;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+        }
+        footer {
+            background: #111;
+            color: #999;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            border-top: 1px solid #222;
+        }
