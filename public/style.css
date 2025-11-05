@@ -1,5 +1,0 @@
-body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-h1 { text-align: center; }
-.movies { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-.movie-card { background: white; padding: 15px; border-radius: 10px; width: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-.movie-card img { width: 100%; height: auto; border-radius: 5px; }

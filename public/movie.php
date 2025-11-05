@@ -60,7 +60,7 @@ $sessions = getSessionsByMovie($movie['id']);
                         <p class="mb-0 text-muted">Hall: <?= htmlspecialchars($session['hall_name']) ?></p>
                     </div>
                     <div>
-                        <p class="text-orange fw-bold mb-2"><?= number_format($session['price'], 2) ?> ₽</p>
+                        <p class="text-orange fw-bold mb-2"><?= number_format($session['price'], 2) ?> €</p>
                         <a href="booking.php?session_id=<?= $session['id'] ?>" class="btn btn-orange btn-sm">Book</a>
                     </div>
                 </div>

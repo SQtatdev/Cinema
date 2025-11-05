@@ -1,77 +1,108 @@
 <?php
+require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    die('Invalid request.');
-}
-
+// Получаем данные из формы
 $name = trim($_POST['name'] ?? '');
 $email = trim($_POST['email'] ?? '');
-$seats = (int)($_POST['seats'] ?? 0);
-$session_id = (int)($_POST['session_id'] ?? 0);
+$session_id = $_POST['session_id'] ?? null;
+$seats = (int)($_POST['seats'] ?? 1);
+$isPremium = isset($_POST['premium']) ? 1 : 0;
 
-if (!$name || !$email || !$session_id || $seats < 1) {
-    die('Please fill out all fields.');
+// Проверка на обязательные поля
+if (!$name || !$email || !$session_id) {
+    die('Missing booking information.');
 }
 
-// Получаем данные о сеансе и фильме
-global $pdo;
-$stmt = $pdo->prepare("SELECT s.*, m.title, h.name AS hall_name 
-                       FROM sessions s
-                       JOIN movies m ON s.movie_id = m.id
-                       JOIN halls h ON s.hall_id = h.id
-                       WHERE s.id = ?");
+// Проверяем, есть ли пользователь
+$stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+$stmt->execute([$email]);
+$user = $stmt->fetch();
+
+if (!$user && !isset($_POST['password'])) {
+    // Если пользователя нет — предлагаем создать пароль
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Create Account</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-dark text-white">
+    <div class="container mt-5">
+        <h2>Create an account</h2>
+        <p>We couldn’t find your email in our system. Please set a password to continue your booking.</p>
+        <form method="POST">
+            <input type="hidden" name="name" value="<?= htmlspecialchars($name) ?>">
+            <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
+            <input type="hidden" name="session_id" value="<?= htmlspecialchars($session_id) ?>">
+            <input type="hidden" name="seats" value="<?= htmlspecialchars($seats) ?>">
+            <input type="hidden" name="premium" value="<?= htmlspecialchars($isPremium) ?>">
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Create password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-warning">Continue Booking</button>
+        </form>
+    </div>
+    </body>
+    </html>
+    <?php
+    exit;
+}
+
+// Если пользователь не существует, но пароль уже введён — создаём
+if (!$user && isset($_POST['password'])) {
+    $hashedPassword = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, 'user', NOW())");
+    $stmt->execute([$name, $email, $hashedPassword]);
+
+    $user_id = $pdo->lastInsertId();
+} else {
+    $user_id = $user['id'];
+}
+
+// Получаем цену сеанса
+$stmt = $pdo->prepare("SELECT price FROM sessions WHERE id = ?");
 $stmt->execute([$session_id]);
 $session = $stmt->fetch();
 
-if (!$session) {
-    die('Invalid session.');
+if (!$session) die('Invalid session ID.');
+
+$basePrice = $session['price'];
+$finalPrice = $isPremium ? $basePrice * 1.2 : $basePrice;
+
+// Создаём бронирование
+for ($i = 0; $i < $seats; $i++) {
+    $seat_row = rand(1, 10);
+    $seat_number = rand(1, 20);
+    $status = $isPremium ? 'premium' : 'booked';
+
+    $stmt = $pdo->prepare("INSERT INTO bookings (user_id, session_id, seat_row, seat_number, status, created_at)
+                           VALUES (?, ?, ?, ?, ?, NOW())");
+    $stmt->execute([$user_id, $session_id, $seat_row, $seat_number, $status, ]);
 }
 
-// Общая сумма
-$total_price = $session['price'] * $seats;
-
-// Сохраняем бронь в БД
-$stmt = $pdo->prepare("INSERT INTO bookings (session_id, name, email, seats, total_price, booking_time) 
-                       VALUES (?, ?, ?, ?, ?, NOW())");
-$stmt->execute([$session_id, $name, $email, $seats, $total_price]);
-$booking_id = $pdo->lastInsertId();
+$total = $finalPrice * $seats;
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Booking Confirmation</title>
-
+    <title>Booking Confirmed</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles/style_conf_bookings.css">
-
 </head>
-<body>
+<body class="bg-dark text-white">
+<div class="container mt-5 text-center">
+    <h1 class="text-warning mb-4">Booking Confirmed 🎉</h1>
+    <p>Thank you, <strong><?= htmlspecialchars($name) ?></strong>!</p>
+    <p>You have booked <strong><?= $seats ?></strong> <?= $isPremium ? 'Premium ' : '' ?>seat(s).</p>
+    <p>Total price: <strong><?= number_format($total, 2) ?> €</strong></p>
 
-<div class="container">
-    <div class="confirmation-box">
-        <h1>✅ Booking Confirmed!</h1>
-        <p>Thank you, <strong><?= htmlspecialchars($name) ?></strong>.<br>
-           Your booking has been successfully saved.</p>
-
-        <div class="summary">
-            <p><strong>Booking ID:</strong> #<?= $booking_id ?></p>
-            <p><strong>Movie:</strong> <?= htmlspecialchars($session['title']) ?></p>
-            <p><strong>Date & Time:</strong> <?= date('d M Y, H:i', strtotime($session['show_time'])) ?></p>
-            <p><strong>Hall:</strong> <?= htmlspecialchars($session['hall_name']) ?></p>
-            <p><strong>Tickets:</strong> <?= $seats ?></p>
-            <p><strong>Total price:</strong> <?= number_format($total_price, 2) ?> ₽</p>
-        </div>
-
-        <a href="index.php" class="btn btn-orange mt-4">Back to Movies</a>
-    </div>
+    <a href="index.php" class="btn btn-outline-light mt-4">Return to Home</a>
 </div>
-
-<footer>
-    <p>© <?= date('Y') ?> MyCinema. All rights reserved.</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

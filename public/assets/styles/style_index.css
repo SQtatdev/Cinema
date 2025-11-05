@@ -1,57 +1,59 @@
+/* === Global Styles === */
 body {
-            background-color: #0e0e0e;
-            color: #f1f1f1;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        h1 {
-            color: #ff7b00;
-            font-weight: 600;
-            text-align: center;
-            margin: 40px 0 20px;
-        }
-        .movie-card {
-            background: #1a1a1a;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .movie-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(255,123,0,0.4);
-        }
-        .movie-card img {
-            width: 100%;
-            height: 380px;
-            object-fit: cover;
-        }
-        .movie-info {
-            padding: 15px;
-        }
-        .movie-info h2 {
-            color: #fff;
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-        }
-        .movie-info p {
-            color: #ccc;
-            margin-bottom: 4px;
-            font-size: 0.9rem;
-        }
-        .btn-orange {
-            background-color: #ff7b00;
-            color: white;
-            border: none;
-            transition: background-color 0.3s;
-        }
-        .btn-orange:hover {
-            background-color: #e46a00;
-        }
-        footer {
-            background: #111;
-            color: #999;
-            text-align: center;
-            padding: 20px;
-            margin-top: 50px;
-            border-top: 1px solid #222;
-        }
+    background-color: #121212;
+    color: #fff;
+}
+
+/* === Navbar === */
+.navbar {
+    background-color: #1c1c1c;
+    border-bottom: 2px solid #ff6f00;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #ff6f00 !important;
+    letter-spacing: 1px;
+}
+
+.nav-link,
+.dropdown-item {
+    color: #fff !important;
+}
+
+.nav-link:hover,
+.dropdown-item:hover {
+    color: #ff6f00 !important;
+}
+
+/* === Movie Cards === */
+.movie-card {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 15px;
+    transition: transform 0.2s;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+}
+
+/* === Buttons === */
+.btn-orange {
+    background-color: #ff6f00;
+    color: white;
+}
+
+.btn-orange:hover {
+    background-color: #e65c00;
+}
+
+/* === Footer === */
+footer {
+    background-color: #1c1c1c;
+    padding: 20px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 50px;
+}

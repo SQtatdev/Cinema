@@ -29,16 +29,16 @@ if (!$session) {
     <link rel="stylesheet" href="assets/styles/style_booking.css">
 </head>
 <body>
-
-<div class="container booking-container">
+<div class="container booking-container mt-5">
     <a href="movie.php?id=<?= $session['movie_id'] ?>" class="btn btn-sm btn-outline-light mb-4">← Back</a>
 
-    <h1>Book Ticket</h1>
+    <h1 class="text-orange">Book Ticket</h1>
+
     <div class="summary-box mt-3">
         <h4><?= htmlspecialchars($session['title']) ?></h4>
         <p><strong>Date & Time:</strong> <?= date('d M Y, H:i', strtotime($session['show_time'])) ?></p>
         <p><strong>Hall:</strong> <?= htmlspecialchars($session['hall_name']) ?></p>
-        <p><strong>Price per ticket:</strong> <?= number_format($session['price'], 2) ?> ₽</p>
+        <p><strong>Price per ticket:</strong> <?= number_format($session['price'], 2) ?> €</p>
     </div>
 
     <form action="confirm_booking.php" method="POST" class="mt-4">
@@ -61,6 +61,13 @@ if (!$session) {
                     <option value="<?= $i ?>"><?= $i ?></option>
                 <?php endfor; ?>
             </select>
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="premium" name="premium" value="1">
+            <label class="form-check-label" for="premium">
+                Premium seat (+20%)
+            </label>
         </div>
 
         <button type="submit" class="btn btn-orange w-100 mt-3">Confirm Booking</button>

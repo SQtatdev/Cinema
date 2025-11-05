@@ -1,50 +1,61 @@
 <?php
 require_once '../includes/functions.php';
-$movies = getAllMovies();
-$id = $_GET['id'] ?? null;
+require_once '../includes/db.php';
+session_start();
+
+// 🔍 поиск фильмов
+$search = $_GET['search'] ?? '';
+if ($search) {
+    $stmt = $pdo->prepare("SELECT * FROM movies WHERE title LIKE ?");
+    $stmt->execute(["%$search%"]);
+    $movies = $stmt->fetchAll();
+} else {
+    $movies = getAllMovies();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cinema - Now Showing</title>
-    <!-- Bootstrap 5 -->
+    <title>Cinema - Movies</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/styles/style_index.css">
-
 </head>
-<body>
+<body class="bg-dark text-white">
+<?php include '../includes/header.php'; ?>
 
-    <div class="container">
-        <h1>Now Showing</h1>
+<div class="container mt-5">
+    <?php if ($search): ?>
+        <h2 class="text-warning mb-4">Search results for: “<?= htmlspecialchars($search) ?>”</h2>
+    <?php else: ?>
+        <h1 class="text-warning mb-4">🎞 Now Showing</h1>
+    <?php endif; ?>
 
+    <?php if (empty($movies)): ?>
+        <p class="text-secondary">No movies found.</p>
+    <?php else: ?>
         <div class="row g-4">
             <?php foreach ($movies as $movie): ?>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="movie-card">
-                        <?php 
-                            $posterPath = "assets/posters/" . htmlspecialchars($movie['poster']) . ".jpg";
-                            if (!file_exists($posterPath)) {
-                                $posterPath = "assets/posters/default.jpg";
-                            }
-                        ?>
-                        <img src="<?= $posterPath ?>" alt="<?= htmlspecialchars($movie['title']) ?>">
-                        <div class="movie-info">
-                            <h2><?= htmlspecialchars($movie['title']) ?></h2>
-                            <p><strong>Genre:</strong> <?= htmlspecialchars($movie['genre']) ?></p>
-                            <p><strong>Duration:</strong> <?= htmlspecialchars($movie['duration']) ?> min</p>
-                            <a href="movie.php?id=<?= $movie['id'] ?>" class="btn btn-orange w-100 mt-2">View Sessions</a>
-                        </div>
+                <div class="col-md-3">
+                    <div class="movie-card text-center bg-secondary bg-opacity-10 border border-secondary rounded-3 p-3 h-100">
+                        <img src="assets/posters/<?= htmlspecialchars($movie['poster']) ?>.jpg"
+                             alt="<?= htmlspecialchars($movie['title']) ?>"
+                             class="img-fluid rounded mb-3"
+                             onerror="this.src='assets/posters/default.jpg'">
+                        <h5><?= htmlspecialchars($movie['title']) ?></h5>
+                        <p class="text-muted"><?= htmlspecialchars($movie['genre']) ?> • <?= htmlspecialchars($movie['duration']) ?> min</p>
+                        <a href="movie.php?id=<?= $movie['id'] ?>" class="btn btn-warning w-100">View Sessions</a>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
-    </div>
+    <?php endif; ?>
+</div>
 
-    <footer>
-        <p>© <?= date('Y') ?> MyCinema. All rights reserved.</p>
-    </footer>
+<footer class="text-center text-secondary mt-5 py-4 border-top border-secondary">
+    <p>© <?= date('Y') ?> MyCinema. All rights reserved.</p>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
