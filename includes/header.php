@@ -9,7 +9,7 @@ require_once __DIR__ . '/functions.php';
 $user = $_SESSION['user'] ?? null;
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-warning">
+<nav class="navbar navbar-expand-lg" style="color: #ff6f00;">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold text-warning" href="/Cinema/public/index.php">🎬 MyCinema</a>
 
@@ -19,12 +19,12 @@ $user = $_SESSION['user'] ?? null;
 
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
             <form class="d-flex ms-auto me-auto" role="search" method="GET" action="index.php" style="max-width: 400px;">
-                <input class="form-control me-2 bg-dark text-white border-secondary"
+                <input class="form-control me-2 bg-dark text-white border-secondary" 
                        type="search"
                        name="search"
                        placeholder="Search movies..."
                        value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
-                <button class="btn btn-warning" type="submit">Search</button>
+                <button class="btn" type="submit" style="background-color: #ff6f00;">Search</button>
             </form>
 
             <ul class="navbar-nav ms-auto">

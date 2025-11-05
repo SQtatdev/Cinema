@@ -26,9 +26,9 @@ if ($search) {
 
 <div class="container mt-5">
     <?php if ($search): ?>
-        <h2 class="text-warning mb-4">Search results for: “<?= htmlspecialchars($search) ?>”</h2>
+        <h2 class="text" style="color: #ff6f00;">Search results for: “<?= htmlspecialchars($search) ?>”</h2>
     <?php else: ?>
-        <h1 class="text-warning mb-4">🎞 Now Showing</h1>
+        <h1 class="text" style="color: #ff6f00;">🎞 Now Showing</h1>
     <?php endif; ?>
 
     <?php if (empty($movies)): ?>
@@ -43,8 +43,8 @@ if ($search) {
                              class="img-fluid rounded mb-3"
                              onerror="this.src='assets/posters/default.jpg'">
                         <h5><?= htmlspecialchars($movie['title']) ?></h5>
-                        <p class="text-muted"><?= htmlspecialchars($movie['genre']) ?> • <?= htmlspecialchars($movie['duration']) ?> min</p>
-                        <a href="movie.php?id=<?= $movie['id'] ?>" class="btn btn-warning w-100">View Sessions</a>
+                        <p class="text"><?= htmlspecialchars($movie['genre']) ?> • <?= htmlspecialchars($movie['duration']) ?> min</p>
+                        <a href="movie.php?id=<?= $movie['id'] ?>" class="btn w-100" style="background-color: #ff6f00;">View Sessions</a>
                     </div>
                 </div>
             <?php endforeach; ?>

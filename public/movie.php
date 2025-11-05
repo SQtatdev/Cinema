@@ -45,7 +45,7 @@ $sessions = getSessionsByMovie($movie['id']);
             <?php if (!empty($movie['description'])): ?>
                 <p><strong>Description:</strong> <?= nl2br(htmlspecialchars($movie['description'])) ?></p>
             <?php else: ?>
-                <p class="text-muted">No description available.</p>
+                <p class="text">No description available.</p>
             <?php endif; ?>
         </div>
     </div>
@@ -57,7 +57,7 @@ $sessions = getSessionsByMovie($movie['id']);
                 <div class="session-card d-flex justify-content-between align-items-center">
                     <div>
                         <h5 class="mb-1"><?= date('d M Y, H:i', strtotime($session['show_time'])) ?></h5>
-                        <p class="mb-0 text-muted">Hall: <?= htmlspecialchars($session['hall_name']) ?></p>
+                        <p class="mb-0 text">Hall: <?= htmlspecialchars($session['hall_name']) ?></p>
                     </div>
                     <div>
                         <p class="text-orange fw-bold mb-2"><?= number_format($session['price'], 2) ?> €</p>
