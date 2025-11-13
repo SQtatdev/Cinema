@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
 $user = 'root';
-$pass = 'root'; // В Laragon по умолчанию пароль пустой!
+$pass = ''; // В Laragon по умолчанию пароль пустой!
 $dbname = 'cinema_db';
 $charset = 'utf8mb4';
 
@@ -15,7 +15,7 @@ try {
     ]);
 
     // Создаём базу, если её нет
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET $charset COLLATE ${charset}_general_ci");
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET $charset COLLATE {$charset}_general_ci");
     $pdo->exec("USE `$dbname`");
 
     // Импортируем SQL, если база пуста

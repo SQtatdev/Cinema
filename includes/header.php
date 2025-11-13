@@ -39,7 +39,7 @@ $user = $_SESSION['user'] ?? null;
                             <li><h6 class="dropdown-header text-white"><?= htmlspecialchars($user['email']) ?></h6></li>
                             <li><a class="dropdown-item text-white" href="my_bookings.php">🎟 My Bookings</a></li>
                             <?php if ($user['role'] === 'admin'): ?>
-                                <li><a class="dropdown-item text-white" href="admin_dashboard.php">🛠 Admin Panel</a></li>
+                                <li><a class="dropdown-item text-white" href="admin.php">🛠 Admin Panel</a></li>
                             <?php endif; ?>
                             <li><hr class="dropdown-divider bg-secondary"></li>
                             <li><a class="dropdown-item text-danger" href="logout.php">🚪 Logout</a></li>

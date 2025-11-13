@@ -11,8 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user'] = $user;
-        header("Location: index.php");
+        // Сохраняем пользователя в сессии
+        $_SESSION['user'] = [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'role' => $user['role'], // добавляем роль
+            'name' => $user['name'] ?? ''
+        ];
+
+        // Редирект: если админ — в админку, иначе на главную
+        if ($user['role'] === 'admin') {
+            header("Location: admin.php");
+        } else {
+            header("Location: index.php");
+        }
         exit;
     } else {
         $error = "Invalid email or password.";
