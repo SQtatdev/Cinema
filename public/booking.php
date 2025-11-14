@@ -1,12 +1,11 @@
 <?php
+session_start();
 require_once '../includes/functions.php';
+require_once '../includes/db.php';
 
 $session_id = $_GET['session_id'] ?? null;
-if (!$session_id) {
-    die('Session not found.');
-}
+if (!$session_id) die('Session not found.');
 
-global $pdo;
 $stmt = $pdo->prepare("SELECT s.*, m.title, h.name AS hall_name 
                        FROM sessions s
                        JOIN movies m ON s.movie_id = m.id
@@ -15,18 +14,15 @@ $stmt = $pdo->prepare("SELECT s.*, m.title, h.name AS hall_name
 $stmt->execute([$session_id]);
 $session = $stmt->fetch();
 
-if (!$session) {
-    die('Invalid session ID.');
-}
+if (!$session) die('Invalid session ID.');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Booking - <?= htmlspecialchars($session['title']) ?></title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles/style_booking.css">
+<meta charset="UTF-8">
+<title>Booking - <?= htmlspecialchars($session['title']) ?></title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles/style_booking.css">
 </head>
 <body>
 <div class="container booking-container mt-5">
@@ -46,13 +42,16 @@ if (!$session) {
 
         <div class="mb-3">
             <label for="name" class="form-label">Your name</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <input type="text" class="form-control" id="name" name="name" required
+                   value="<?= isset($_SESSION['user']) ? htmlspecialchars($_SESSION['user']['name']) : '' ?>">
         </div>
 
-        <div class="mb-3">
-            <label for="email" class="form-label">E-mail</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
+        <?php if (!isset($_SESSION['user'])): ?>
+            <div class="mb-3">
+                <label for="email" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+        <?php endif; ?>
 
         <div class="mb-3">
             <label for="seats" class="form-label">Number of tickets</label>

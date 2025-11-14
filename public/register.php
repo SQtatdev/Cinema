@@ -1,33 +1,45 @@
 <?php
-require_once '../includes/db.php';
 session_start();
+require_once '../includes/db.php';
+require_once '../includes/functions.php'; // чтобы использовать exportMySQLToSql()
+
+$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    // Проверка, существует ли уже пользователь
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    if ($stmt->fetch()) {
-        $error = "A user with this email already exists.";
+    if (!$name || !$email || !$password) {
+        $error = "Please fill in all fields.";
     } else {
-        // Создание нового пользователя
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, 'user', NOW())");
-        $stmt->execute([$name, $email, $hashedPassword]);
+        // Проверка, существует ли уже пользователь
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->fetch()) {
+            $error = "A user with this email already exists.";
+        } else {
+            // Создание нового пользователя
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, 'user', NOW())");
+            $stmt->execute([$name, $email, $hashedPassword]);
 
-        // Сразу авторизуем
-        $_SESSION['user'] = [
-            'id' => $pdo->lastInsertId(),
-            'name' => $name,
-            'email' => $email,
-            'role' => 'user'
-        ];
+            // Экспорт в SQL, если используется
+            if (function_exists('exportMySQLToSql')) {
+                exportMySQLToSql();
+            }
 
-        header("Location: index.php");
-        exit;
+            // Сразу авторизуем
+            $_SESSION['user'] = [
+                'id' => $pdo->lastInsertId(),
+                'name' => $name,
+                'email' => $email,
+                'role' => 'user'
+            ];
+
+            header("Location: index.php");
+            exit;
+        }
     }
 }
 ?>
@@ -49,11 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST">
         <div class="mb-3">
             <label class="form-label">Full Name</label>
-            <input type="text" class="form-control" name="name" required>
+            <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($name ?? '') ?>" required>
         </div>
         <div class="mb-3">
             <label class="form-label">E-mail</label>
-            <input type="email" class="form-control" name="email" required>
+            <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($email ?? '') ?>" required>
         </div>
         <div class="mb-3">
             <label class="form-label">Password</label>
