@@ -17,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['genre'],
             $_POST['duration'],
             $_POST['release_date'],
-            $_FILES['poster'] ?? null
         );
     } elseif (isset($_POST['edit'])) {
         updateMovie(
@@ -27,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['genre'],
             $_POST['duration'],
             $_POST['release_date'],
-            $_FILES['poster'] ?? null
         );
     }
     header('Location: admin.php');

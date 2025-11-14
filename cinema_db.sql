@@ -189,7 +189,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'VJATSESLAV ROVLIN','vjatseslav.rovlin@tptlive.ee','$2y$10$neicwYs5VsC2Jhvd3DR/ke2JQgdh9mjP8bSPmt4.0DDMOdeQkzW.2','user','2025-11-05 18:53:53'),(2,'VJATSESLAV ROVLIN','slava.ryvlin@gmail.com','$2y$10$pqSWu9LhV9Bmhama.BjNn.7DMaE2FJEoYxL8WjfqI/ne5WINTStSi','user','2025-11-05 19:26:47');
+INSERT INTO `users` VALUES (1,'John Doe','john@example.com','123456','user','2025-10-28 10:42:09'),(2,'Admin User','admin@example.com','admin123','admin','2025-10-28 10:42:09'),(3,'VJATSESLAV ROVLIN','vjatseslav.rovlin@tptlive.ee','$2y$10$neicwYs5VsC2Jhvd3DR/ke2JQgdh9mjP8bSPmt4.0DDMOdeQkzW.2','user','2025-11-05 18:53:53'),(4,'VJATSESLAV ROVLIN','slava.ryvlin@gmail.com','$2y$10$pqSWu9LhV9Bmhama.BjNn.7DMaE2FJEoYxL8WjfqI/ne5WINTStSi','user','2025-11-05 19:26:47');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
