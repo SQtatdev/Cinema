@@ -51,6 +51,12 @@ if (!$session) die('Invalid session ID.');
                 <label for="email" class="form-label">E-mail</label>
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Create a password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+                <div class="form-text">Password must be at least 6 characters.</div>
+            </div>
         <?php endif; ?>
 
         <div class="mb-3">
