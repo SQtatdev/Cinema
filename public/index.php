@@ -5,7 +5,7 @@ require_once '../includes/db.php';
 
 session_start();
 
-// 🔍 поиск фильмов
+// 🔍 search
 $search = $_GET['search'] ?? '';
 if ($search) {
     $stmt = $pdo->prepare("SELECT * FROM movies WHERE title LIKE ?");

@@ -11,15 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
-        // Сохраняем пользователя в сессии
+        // seve in session
         $_SESSION['user'] = [
             'id' => $user['id'],
             'email' => $user['email'],
-            'role' => $user['role'], // добавляем роль
+            'role' => $user['role'], // add role
             'name' => $user['name'] ?? ''
         ];
 
-        // Редирект: если админ — в админку, иначе на главную
+        // redireckt: if admin - admin part - else index.php 
         if ($user['role'] === 'admin') {
             header("Location: admin.php");
         } else {

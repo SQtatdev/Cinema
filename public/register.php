@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
-require_once '../includes/functions.php'; // чтобы использовать exportMySQLToSql()
+require_once '../includes/functions.php';
 
 $error = '';
 
@@ -13,23 +13,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$name || !$email || !$password) {
         $error = "Please fill in all fields.";
     } else {
-        // Проверка, существует ли уже пользователь
+        // check if user exists
         $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
             $error = "A user with this email already exists.";
         } else {
-            // Создание нового пользователя
+            // create new user
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
             $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, 'user', NOW())");
             $stmt->execute([$name, $email, $hashedPassword]);
 
-            // Экспорт в SQL, если используется
+            // eksport SQL, is using
             if (function_exists('exportMySQLToSql')) {
                 exportMySQLToSql();
             }
 
-            // Сразу авторизуем
+            // aouto login
             $_SESSION['user'] = [
                 'id' => $pdo->lastInsertId(),
                 'name' => $name,

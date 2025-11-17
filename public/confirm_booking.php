@@ -12,7 +12,7 @@ if (!$name || !$session_id) {
     die('Missing booking information.');
 }
 
-// Получаем цену сеанса
+// ticket cost
 $stmt = $pdo->prepare("SELECT price FROM sessions WHERE id = ?");
 $stmt->execute([$session_id]);
 $session = $stmt->fetch();
@@ -21,22 +21,22 @@ if (!$session) die('Invalid session ID.');
 $basePrice = $session['price'];
 $finalPrice = $isPremium ? $basePrice * 1.2 : $basePrice;
 
-// Определяем пользователя
+// user identification
 if (isset($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
 } else {
-    // Гость → email и пароль обязательны
+    // guest → email и password
     $email = trim($_POST['email'] ?? '');
     $password_input = trim($_POST['password'] ?? '');
     if (!$email || !$password_input) die('Email and password are required for guests.');
 
-    // Проверяем, есть ли пользователь с таким email
+    // check by email
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
     if (!$user) {
-        // Создаем нового пользователя
+        // create new user
         $hashed_password = password_hash($password_input, PASSWORD_BCRYPT);
         $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, 'user', NOW())");
         $stmt->execute([$name, $email, $hashed_password]);
@@ -45,7 +45,7 @@ if (isset($_SESSION['user'])) {
         $user_id = $user['id'];
     }
 
-    // Сохраняем пользователя в сессии
+    // save user in session
     $_SESSION['user'] = [
         'id' => $user_id,
         'name' => $name,
@@ -53,7 +53,7 @@ if (isset($_SESSION['user'])) {
     ];
 }
 
-// Создаем бронирование
+// create booking
 for ($i = 0; $i < $seats; $i++) {
     $seat_row = rand(1, 10);
     $seat_number = rand(1, 20);

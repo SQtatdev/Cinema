@@ -7,15 +7,15 @@ function exportMySQLToSql() {
     $config = include __DIR__ . '/config.php';
     $db = 'cinema_db';
     $user = 'root';
-    $pass = ''; // пустой пароль Laragon
+    $pass = ''; 
     $file = __DIR__ . '/../cinema_db.sql';
 
-    // Вариант 1: путь из config
+    // 1: config.php
     $mysqldump = $config['mysqldump_path'];
 
-    // Вариант 2: если MySQL добавлен в PATH, просто вызвать "mysqldump"
+    // 2: if MySQL added to PATH
     if (!file_exists($mysqldump)) {
-        $mysqldump = 'mysqldump'; // будет искать в PATH
+        $mysqldump = 'mysqldump'; // find in PATH
     }
 
     $cmd = "\"$mysqldump\" -u $user --password=\"$pass\" $db > " . escapeshellarg($file);
@@ -27,7 +27,7 @@ function exportMySQLToSql() {
 }
 
 
-// ----------------- ФИЛЬМЫ -----------------
+// ----------------- Movies -----------------
 function getMovieById($id) {
     global $pdo;
     $stmt = $pdo->prepare("SELECT * FROM movies WHERE id=?");
@@ -53,7 +53,7 @@ function addMovie($title, $description, $genre, $duration, $release_date) {
     ");
     $stmt->execute([$title, $description, $genre, $duration, $release_date, $posterId]);
 
-    exportMySQLToSql(); // обновляем SQL автоматически
+    exportMySQLToSql(); 
     return $posterId;
 }
 
@@ -64,7 +64,7 @@ function updateMovie($id, $title, $description, $genre, $duration, $release_date
     ");
     $stmt->execute([$title, $description, $genre, $duration, $release_date, $id]);
 
-    exportMySQLToSql(); // обновляем SQL автоматически
+    exportMySQLToSql(); 
 }
 
 function deleteMovie($id) {
@@ -72,7 +72,7 @@ function deleteMovie($id) {
     $pdo->prepare("DELETE FROM sessions WHERE movie_id=?")->execute([$id]);
     $pdo->prepare("DELETE FROM movies WHERE id=?")->execute([$id]);
 
-    exportMySQLToSql(); // обновляем SQL автоматически
+    exportMySQLToSql(); 
 }
 
 // ----------------- СЕССИИ -----------------

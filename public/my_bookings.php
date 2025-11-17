@@ -10,7 +10,7 @@ if (!isset($_SESSION['user'])) {
 
 $user_id = $_SESSION['user']['id'];
 
-// Получаем бронирования пользователя
+// get booking
 $stmt = $pdo->prepare("
     SELECT b.*, m.title, s.show_time, h.name AS hall_name
     FROM bookings b

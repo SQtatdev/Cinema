@@ -2,7 +2,7 @@
 $host = 'localhost';
 $dbname = 'cinema_db';
 $user = 'root';
-$pass = 'mysql'; // Laragon по умолчанию пустой пароль
+$pass = 'mysql';
 $charset = 'utf8mb4';
 
 try {

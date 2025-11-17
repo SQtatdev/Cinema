@@ -2,7 +2,7 @@
 session_start();
 require_once __DIR__ . '/../includes/functions.php';
 
-// Проверка на админа
+// admin check
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header('Location: login.php');
     exit;
@@ -100,7 +100,7 @@ $movies = getAllMovies();
         <tbody>
             <?php foreach ($movies as $m): ?>
             <?php 
-                // Проверяем разные расширения файла
+                // file extension check
                 $posterFile = null;
                 $extensions = ['jpg','png','jpeg','webp'];
                 foreach($extensions as $ext){
