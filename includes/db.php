@@ -11,5 +11,5 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 } catch (PDOException $e) {
-    die("❌ Ошибка подключения к базе: " . $e->getMessage());
+    die("Fucking db password mysql, root or none: " . $e->getMessage());
 }
