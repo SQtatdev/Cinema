@@ -79,7 +79,7 @@ INSERT INTO `movies` (`id`, `title`, `description`, `genre`, `duration`, `releas
 	(9, 'Алиса в Стране чудес', '15-летняя Алиса попадает в Страну чудес, где солнце всегда в зените и нет времени. Среди жителей она узнаёт своих родных, знакомых и друзей, но никто из них не узнаёт Алису. Она для них чужая, антипят, а сами жители Страны чудес называют себя антиподами. Чтобы вернуться домой, Алисе предстоит преодолеть множество препятствий и странностей.', 'fantasy', 108, '2005-07-14', '9', '2025-11-16 19:02:45'),
 	(10, 'Borat: Cultural Learnings of America for Make Benefit Glorious Nation of Kazakhstan', 'Kazakh TV talking head Borat is dispatched to the United States to report on the greatest country in the world.', 'comedy', 84, '2006-06-07', '10', '2025-11-16 19:03:28'),
 	(11, 'The Hangover', 'Three buddies wake up from a bachelor party in Las Vegas with no memory of the previous night and the bachelor missing. They must make their way around the city in order to find their friend in time for his wedding.', 'comedy', 100, '2010-06-08', '11', '2025-11-16 19:04:06'),
-	(12, 'You Don\'t Mess with the Zohan', 'An Israeli Special Forces Soldier fakes his death so he can re-emerge in New York City as a hair stylist.', 'comedy, action', 113, '2008-10-07', '12', '2025-11-16 19:07:20');
+	(12, "You Don\'t Mess with the Zohan", 'An Israeli Special Forces Soldier fakes his death so he can re-emerge in New York City as a hair stylist.', 'comedy, action', 113, '2008-10-07', '12', '2025-11-16 19:07:20');
 
 -- Дамп структуры для таблица cinema_db.payments
 CREATE TABLE IF NOT EXISTS `payments` (
