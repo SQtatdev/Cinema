@@ -2,7 +2,6 @@
 require_once '../includes/functions.php';
 require_once '../includes/db.php';
 
-
 session_start();
 
 // 🔍 search
@@ -40,10 +39,16 @@ if ($search) {
             <?php foreach ($movies as $movie): ?>
                 <div class="col-md-3">
                     <div class="movie-card text-center bg-secondary bg-opacity-10 border border-secondary rounded-3 p-3 h-100">
-                        <img src="assets/posters/<?= htmlspecialchars($movie['poster']) ?>.jpg"
-                             alt="<?= htmlspecialchars($movie['title']) ?>"
-                             class="img-fluid rounded mb-3"
-                             onerror="this.src='assets/posters/default.jpg'">
+                        <?php if (!empty($movie['poster'])): ?>
+                            <img src="data:image/jpeg;base64,<?= base64_encode($movie['poster']) ?>"
+                                 alt="<?= htmlspecialchars($movie['title']) ?>"
+                                 class="img-fluid rounded mb-3">
+                        <?php else: ?>
+                            <img src="assets/posters/default.jpg"
+                                 alt="No Poster"
+                                 class="img-fluid rounded mb-3">
+                        <?php endif; ?>
+
                         <h5><?= htmlspecialchars($movie['title']) ?></h5>
                         <p class="text"><?= htmlspecialchars($movie['genre']) ?> • <?= htmlspecialchars($movie['duration']) ?> min</p>
                         <a href="movie.php?id=<?= $movie['id'] ?>" class="btn w-100" style="background-color: #ff6f00;">View Sessions</a>

@@ -28,16 +28,17 @@ $sessions = getSessionsByMovie($movie['id']);
 <div class="container">
     <a href="index.php" class="btn btn-sm btn-outline-light mt-4 mb-3">← Back to movies</a>
 
-    <div class="movie-header">
-        <?php 
-            $posterPath = "assets/posters/" . htmlspecialchars($movie['poster']) . ".jpg";
-            if (!file_exists($posterPath)) {
-                $posterPath = "assets/posters/default.jpg";
-            }
-        ?>
+    <div class="movie-header row">
         <div class="col-md-4">
-            <img src="<?= $posterPath ?>" alt="<?= htmlspecialchars($movie['title']) ?>">
+            <?php if (!empty($movie['poster'])): ?>
+                <img src="data:image/jpeg;base64,<?= base64_encode($movie['poster']) ?>" 
+                     alt="<?= htmlspecialchars($movie['title']) ?>" class="img-fluid rounded mb-3">
+            <?php else: ?>
+                <img src="assets/posters/default.jpg" 
+                     alt="No poster" class="img-fluid rounded mb-3">
+            <?php endif; ?>
         </div>
+
         <div class="movie-details col-md-7">
             <h1><?= htmlspecialchars($movie['title']) ?></h1>
             <p><strong>Genre:</strong> <?= htmlspecialchars($movie['genre']) ?></p>
@@ -50,11 +51,11 @@ $sessions = getSessionsByMovie($movie['id']);
         </div>
     </div>
 
-    <div class="sessions-list">
+    <div class="sessions-list mt-4">
         <h3 class="text-orange mb-3">Available Sessions</h3>
         <?php if ($sessions): ?>
             <?php foreach ($sessions as $session): ?>
-                <div class="session-card d-flex justify-content-between align-items-center">
+                <div class="session-card d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
                     <div>
                         <h5 class="mb-1"><?= date('d M Y, H:i', strtotime($session['show_time'])) ?></h5>
                         <p class="mb-0 text">Hall: <?= htmlspecialchars($session['hall_name']) ?></p>
@@ -71,7 +72,7 @@ $sessions = getSessionsByMovie($movie['id']);
     </div>
 </div>
 
-<footer>
+<footer class="mt-5 text-center text-secondary">
     <p>© <?= date('Y') ?> MyCinema. All rights reserved.</p>
 </footer>
 

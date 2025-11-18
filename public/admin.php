@@ -10,6 +10,11 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
 
 // Handle CRUD
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $posterData = null;
+    if (!empty($_FILES['poster']['tmp_name'])) {
+        $posterData = file_get_contents($_FILES['poster']['tmp_name']);
+    }
+
     if (isset($_POST['add'])) {
         addMovie(
             $_POST['title'],
@@ -17,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['genre'],
             $_POST['duration'],
             $_POST['release_date'],
+            $posterData
         );
     } elseif (isset($_POST['edit'])) {
         updateMovie(
@@ -26,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['genre'],
             $_POST['duration'],
             $_POST['release_date'],
+            $posterData
         );
     }
     header('Location: admin.php');
@@ -71,12 +78,12 @@ $movies = getAllMovies();
             <input class="form-control" type="number" name="duration" placeholder="Duration (minutes)" value="<?= $editMovie['duration'] ?? '' ?>">
         </div>
         <div class="mb-2">
-            <input class="form-control" type="date" name="release_date" placeholder="Release Date" value="<?= $editMovie['release_date'] ?? '' ?>">
+            <input class="form-control" type="date" name="release_date" value="<?= $editMovie['release_date'] ?? '' ?>">
         </div>
         <div class="mb-2">
             <input class="form-control" type="file" name="poster">
-            <?php if($editMovie): ?>
-                <small>Current poster: <?= $editMovie['poster'] ?></small>
+            <?php if($editMovie && !empty($editMovie['poster'])): ?>
+                <small>Current poster shown in list</small>
             <?php endif; ?>
         </div>
         <button type="submit" name="<?= $editMovie ? 'edit' : 'add' ?>" class="btn btn-primary"><?= $editMovie ? 'Save Changes' : 'Add Movie' ?></button>
@@ -99,34 +106,23 @@ $movies = getAllMovies();
         </thead>
         <tbody>
             <?php foreach ($movies as $m): ?>
-            <?php 
-                // file extension check
-                $posterFile = null;
-                $extensions = ['jpg','png','jpeg','webp'];
-                foreach($extensions as $ext){
-                    if(file_exists(__DIR__ . '/../public/assets/posters/' . $m['poster'] . '.' . $ext)){
-                        $posterFile = $m['poster'] . '.' . $ext;
-                        break;
-                    }
-                }
-            ?>
-            <tr>
-                <td><?= $m['id'] ?></td>
-                <td><?= htmlspecialchars($m['title']) ?></td>
-                <td><?= htmlspecialchars($m['description']) ?></td>
-                <td><?= htmlspecialchars($m['genre']) ?></td>
-                <td><?= $m['duration'] ?></td>
-                <td><?= $m['release_date'] ?></td>
-                <td>
-                    <?php if ($posterFile): ?>
-                        <img src="/public/assets/posters/<?= $posterFile ?>" alt="Poster" width="50">
-                    <?php else: ?>
-                        No poster
-                    <?php endif; ?>
-                </td>
-                <td><a class="btn btn-sm btn-warning" href="?edit_id=<?= $m['id'] ?>">Edit</a></td>
-                <td><a class="btn btn-sm btn-danger" href="?delete=<?= $m['id'] ?>" onclick="return confirm('Are you sure to delete this movie?')">Delete</a></td>
-            </tr>
+                <tr>
+                    <td><?= $m['id'] ?></td>
+                    <td><?= htmlspecialchars($m['title']) ?></td>
+                    <td><?= htmlspecialchars($m['description']) ?></td>
+                    <td><?= htmlspecialchars($m['genre']) ?></td>
+                    <td><?= $m['duration'] ?></td>
+                    <td><?= $m['release_date'] ?></td>
+                    <td>
+                        <?php if (!empty($m['poster'])): ?>
+                            <img src="data:image/jpeg;base64,<?= base64_encode($m['poster']) ?>" width="50">
+                        <?php else: ?>
+                            No poster
+                        <?php endif; ?>
+                    </td>
+                    <td><a class="btn btn-sm btn-warning" href="?edit_id=<?= $m['id'] ?>">Edit</a></td>
+                    <td><a class="btn btn-sm btn-danger" href="?delete=<?= $m['id'] ?>" onclick="return confirm('Are you sure to delete this movie?')">Delete</a></td>
+                </tr>
             <?php endforeach; ?>
         </tbody>
     </table>

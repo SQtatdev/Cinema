@@ -40,32 +40,37 @@ function getAllMovies() {
     return $pdo->query("SELECT * FROM movies ORDER BY id DESC")->fetchAll();
 }
 
-function addMovie($title, $description, $genre, $duration, $release_date) {
+function addMovie($title, $description, $genre, $duration, $release_date, $poster = null) {
     global $pdo;
-
-    // poster = max(poster) + 1
-    $posterId = $pdo->query("SELECT MAX(poster) FROM movies")->fetchColumn();
-    $posterId = $posterId ? $posterId + 1 : 1;
 
     $stmt = $pdo->prepare("
         INSERT INTO movies (title, description, genre, duration, release_date, poster)
         VALUES (?, ?, ?, ?, ?, ?)
     ");
-    $stmt->execute([$title, $description, $genre, $duration, $release_date, $posterId]);
+    $stmt->execute([$title, $description, $genre, $duration, $release_date, $poster]);
 
     exportMySQLToSql(); 
-    return $posterId;
 }
 
-function updateMovie($id, $title, $description, $genre, $duration, $release_date) {
+
+function updateMovie($id, $title, $description, $genre, $duration, $release_date, $poster = null) {
     global $pdo;
-    $stmt = $pdo->prepare("
-        UPDATE movies SET title=?, description=?, genre=?, duration=?, release_date=? WHERE id=?
-    ");
-    $stmt->execute([$title, $description, $genre, $duration, $release_date, $id]);
+
+    if ($poster) {
+        $stmt = $pdo->prepare("
+            UPDATE movies SET title=?, description=?, genre=?, duration=?, release_date=?, poster=? WHERE id=?
+        ");
+        $stmt->execute([$title, $description, $genre, $duration, $release_date, $poster, $id]);
+    } else {
+        $stmt = $pdo->prepare("
+            UPDATE movies SET title=?, description=?, genre=?, duration=?, release_date=? WHERE id=?
+        ");
+        $stmt->execute([$title, $description, $genre, $duration, $release_date, $id]);
+    }
 
     exportMySQLToSql(); 
 }
+
 
 function deleteMovie($id) {
     global $pdo;

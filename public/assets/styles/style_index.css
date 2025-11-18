@@ -35,6 +35,14 @@ body {
     transition: transform 0.2s;
 }
 
+.movie-card img {
+    width: 100%;
+    height: 350px; /* выбери нужную высоту */
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px;
+}
+
 .movie-card:hover {
     transform: translateY(-5px);
 }
