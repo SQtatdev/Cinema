@@ -87,9 +87,11 @@ function getSessionsByMovie($movie_id) {
         SELECT s.*, h.name AS hall_name
         FROM sessions s
         JOIN halls h ON s.hall_id = h.id
-        WHERE s.movie_id=?
+        WHERE s.movie_id = ?
+          AND s.show_time > NOW()
         ORDER BY s.show_time ASC
     ");
     $stmt->execute([$movie_id]);
     return $stmt->fetchAll();
 }
+
