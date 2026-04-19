@@ -2,7 +2,7 @@
 function sendTicketEmail($to, $movie, $time, $seats) {
     $subject = "Your cinema ticket";
     $message = "
-Your booking is confirmed 🎟️
+Your booking is confirmed
 
 Movie: $movie
 Date: $time
