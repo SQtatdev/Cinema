@@ -303,3 +303,76 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `created_at`) VA
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+
+
+
+-- ============================================================
+-- MIGRATION (COMPATIBLE WITH ALL MYSQL VERSIONS)
+-- ============================================================
+
+ALTER TABLE `bookings`
+    ADD COLUMN `name` VARCHAR(120) NOT NULL DEFAULT '',
+    ADD COLUMN `email` VARCHAR(120) NOT NULL DEFAULT '',
+    ADD COLUMN `total_price` DECIMAL(10,2) NOT NULL DEFAULT 0;
+
+CREATE TABLE IF NOT EXISTS `seats` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `session_id` INT NOT NULL,
+    `row_number` INT NOT NULL,
+    `seat_number` INT NOT NULL,
+    `type` ENUM('standard','premium') NOT NULL DEFAULT 'standard',
+    `status` ENUM('available','booked') NOT NULL DEFAULT 'available',
+    `booking_id` INT NULL,
+    UNIQUE KEY `uq_seat` (`session_id`, `row_number`, `seat_number`),
+    FOREIGN KEY (`session_id`) REFERENCES `sessions`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS `booking_seats` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `booking_id` INT NOT NULL,
+    `seat_id` INT NOT NULL,
+    UNIQUE KEY `uq_bs` (`booking_id`, `seat_id`),
+    FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`seat_id`) REFERENCES `seats`(`id`) ON DELETE CASCADE
+);
+
+INSERT IGNORE INTO `seats`
+(`session_id`, `row_number`, `seat_number`, `type`, `status`, `booking_id`)
+SELECT
+    b.session_id,
+    b.seat_row,
+    b.seat_number,
+    CASE 
+        WHEN b.status = 'premium' THEN 'premium'
+        ELSE 'standard'
+    END,
+    CASE 
+        WHEN b.status IN ('booked','premium','paid') THEN 'booked'
+        ELSE 'available'
+    END,
+    b.id
+FROM `bookings` b;
+
+INSERT IGNORE INTO `booking_seats` (`booking_id`, `seat_id`)
+SELECT 
+    b.id,
+    s.id
+FROM `bookings` b
+JOIN `seats` s
+    ON s.session_id = b.session_id
+   AND s.row_number = b.seat_row
+   AND s.seat_number = b.seat_number;
+
+UPDATE `bookings` b
+JOIN `sessions` s ON s.id = b.session_id
+SET b.total_price = 
+    CASE
+        WHEN b.status = 'premium' THEN ROUND(s.price * 1.2, 2)
+        ELSE s.price
+    END
+WHERE b.total_price = 0;
+
+CREATE INDEX `idx_seats_session`
+ON `seats` (`session_id`, `status`);

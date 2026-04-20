@@ -1,13 +1,13 @@
 <?php
 session_start();
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 require_once '../includes/mail.php';
 
-
-/* ══════════════════════════════════════════════════
-   2. Входные данные
-══════════════════════════════════════════════════ */
 $session_id = filter_input(INPUT_POST, 'session_id', FILTER_VALIDATE_INT);
 $name       = trim($_POST['name'] ?? '');
 $seatIdsRaw = trim($_POST['seat_ids'] ?? '');
@@ -29,9 +29,6 @@ if (count($seatIds) === 0 || count($seatIds) > 10) {
     die('Invalid number of seats selected.');
 }
 
-/* ══════════════════════════════════════════════════
-   3. Данные сессии
-═════════════════════════════════════════════════ */
 $stmt = $pdo->prepare("
     SELECT s.*, m.title
     FROM sessions s
@@ -45,9 +42,6 @@ if (!$session) {
     die('Session not found.');
 }
 
-/* ══════════════════════════════════════════════════
-   4. Пользователь
-══════════════════════════════════════════════════ */
 $user_id = null;
 $email   = '';
 
@@ -93,9 +87,6 @@ if (isset($_SESSION['user'])) {
     }
 }
 
-/* ══════════════════════════════════════════════════
-   5. Бронирование  (транзакция + блокировка мест)
-══════════════════════════════════════════════════ */
 $lockedSeats = [];
 $total       = 0.0;
 
@@ -105,7 +96,6 @@ try {
     $placeholders = implode(',', array_fill(0, count($seatIds), '?'));
     $params       = array_merge([$session_id], $seatIds);
 
-    // Lock the requested seats
     $lockStmt = $pdo->prepare("
         SELECT id, `type`, status, `row_number`, seat_number
         FROM seats
@@ -129,7 +119,6 @@ try {
         }
     }
 
-    // Calculate prices server-side
     $basePrice    = (float)$session['price'];
     $premiumPrice = round($basePrice * 1.20, 2);
 
@@ -137,7 +126,6 @@ try {
         $total += ($ls['type'] === 'premium') ? $premiumPrice : $basePrice;
     }
 
-    // Insert one booking row per seat (matches your schema)
     $insBooking = $pdo->prepare("
         INSERT INTO bookings (user_id, session_id, seat_row, seat_number, name, email, total_price)
         VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -174,23 +162,22 @@ try {
     $pdo->rollBack();
     error_log('Booking error: ' . $e->getMessage());
     http_response_code(500);
-    die('Ошибка: ' . $e->getMessage());
+    die('Error: ' . $e->getMessage());
 }
 
-/* ══════════════════════════════════════════════════
-   6. Отправка письма
-══════════════════════════════════════════════════ */
-sendTicketEmail(
+/* ══ Send email ══ */
+$mailResult = sendTicketEmail(
     $email,
+    $name,
     $session['title'],
+    $session['movie_id'],
     $session['show_time'],
     count($seatIds),
-    $total
+    $total,
+    $lockedSeats
 );
 
-/* ══════════════════════════════════════════════════
-   7. Подготовка данных для отображения
-══════════════════════════════════════════════════ */
+
 $seatLabels = array_map(
     fn($ls) => 'row ' . $ls['row_number'] . ', seat ' . $ls['seat_number']
                 . ($ls['type'] === 'premium' ? ' ★' : ''),
@@ -198,7 +185,7 @@ $seatLabels = array_map(
 );
 ?>
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -216,7 +203,7 @@ $seatLabels = array_map(
     <div class="card bg-secondary text-white mb-4 text-start">
         <div class="card-body">
             <h5 class="card-title"><?= htmlspecialchars($session['title']) ?></h5>
-            <p class="mb-1"><strong>Data:</strong> <?= date('d M Y, H:i', strtotime($session['show_time'])) ?></p>
+            <p class="mb-1"><strong>Date:</strong> <?= date('d M Y, H:i', strtotime($session['show_time'])) ?></p>
             <p class="mb-2"><strong>Seats:</strong></p>
             <ul class="mb-2">
                 <?php foreach ($seatLabels as $label): ?>
