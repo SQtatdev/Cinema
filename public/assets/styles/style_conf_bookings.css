@@ -1,47 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
+
+:root {
+    --orange:     #ff6f00;
+    --orange-dim: #cc5800;
+    --bg:         #0e0e0e;
+    --surface:    #171717;
+    --border:     #262626;
+    --text:       #f0f0f0;
+    --muted:      #777;
+}
+
+* { box-sizing: border-box; }
 
 body {
-    background-color: #0e0e0e;
-    color: #f1f1f1;
-    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', Arial, sans-serif;
+    min-height: 100vh;
 }
+
+/* ── Confirmation box ── */
 .confirmation-box {
-    max-width: 700px;
-    margin: 70px auto;
-    background: #1a1a1a;
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 0 20px rgba(255,123,0,0.25);
+    max-width: 620px;
+    margin: 64px auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 44px 40px;
+    box-shadow: 0 0 40px rgba(255,111,0,.1);
     text-align: center;
 }
-h1 {
-    color: #ff7b00;
-    font-weight: 600;
-    margin-bottom: 25px;
+
+.confirmation-box .icon {
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 16px;
 }
+
+.confirmation-box h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 2px;
+    color: var(--orange);
+    margin: 0 0 8px;
+}
+
+.confirmation-box .subtitle {
+    color: #aaa;
+    font-size: 0.92rem;
+    margin-bottom: 28px;
+}
+
+.confirmation-box .subtitle strong {
+    color: var(--text);
+}
+
+.confirmation-box .email-note {
+    color: #4caf7d;
+    font-size: 0.88rem;
+    margin-bottom: 28px;
+}
+
+/* ── Summary card ── */
 .summary {
     background: #111;
+    border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 20px;
+    padding: 22px 24px;
     text-align: left;
-    margin-top: 20px;
+    margin-bottom: 28px;
 }
+
+.summary h5 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
 .summary p {
-    margin: 8px 0;
-    color: #ddd;
+    margin: 0 0 8px;
+    color: #aaa;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
 }
+
+.summary p strong {
+    color: var(--text);
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.summary p span {
+    color: #ccc;
+    text-align: right;
+}
+
+.summary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px;
+}
+
+.summary ul li {
+    color: #ccc;
+    font-size: 0.88rem;
+    padding: 5px 0;
+    border-bottom: 1px solid #1e1e1e;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.summary ul li::before {
+    content: '🪑';
+    font-size: 0.85rem;
+}
+
+.summary .total-row {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary .total-row .total-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.summary .total-row .total-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    color: var(--orange);
+    line-height: 1;
+}
+
+/* ── Button ── */
 .btn-orange {
-    background-color: #ff7b00;
-    color: white;
-    border: none;
+    display: inline-block;
+    background: var(--orange) !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    padding: 12px 32px !important;
+    font-size: 0.92rem !important;
+    letter-spacing: .3px !important;
+    text-decoration: none !important;
+    transition: background .2s, transform .15s !important;
 }
 .btn-orange:hover {
-    background-color: #e46a00;
+    background: var(--orange-dim) !important;
+    color: #fff !important;
+    transform: scale(1.03) !important;
 }
+
+.btn-outline-light {
+    border-color: var(--border) !important;
+    color: #aaa !important;
+    transition: border-color .2s, color .2s !important;
+}
+.btn-outline-light:hover {
+    border-color: var(--orange) !important;
+    color: var(--orange) !important;
+    background: transparent !important;
+}
+
+/* ── Footer ── */
 footer {
     background: #111;
-    color: #999;
+    color: var(--muted);
     text-align: center;
-    padding: 20px;
+    padding: 22px;
     margin-top: 60px;
-    border-top: 1px solid #222;
+    border-top: 1px solid var(--border);
+    font-size: 0.84rem;
 }
