@@ -1,8 +1,8 @@
 <?php
-$host = 'localhost';
-$dbname = 'cinema_db';
-$user = 'root';
-$pass = 'mysql';
+$host = 'sql311.infinityfree.com';
+$dbname = 'if0_41700966_cinema_db';
+$user = 'if0_41700966';
+$pass = 'tb45wuWfwM';
 $charset = 'utf8mb4';
 
 try {

@@ -1,57 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
+
+:root {
+    --orange:     #ff6f00;
+    --orange-dim: #cc5800;
+    --bg:         #0e0e0e;
+    --surface:    #171717;
+    --surface2:   #1f1f1f;
+    --border:     #262626;
+    --text:       #f0f0f0;
+    --muted:      #777;
+}
+
+* { box-sizing: border-box; }
+
 body {
-            background-color: #0e0e0e;
-            color: #f1f1f1;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        .movie-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 30px;
-            margin: 40px 0;
-        }
-        .movie-header img {
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(255,123,0,0.4);
-            max-width: 100%;
-            height: auto;
-        }
-        .movie-details h1 {
-            color: #ff7b00;
-            font-weight: 600;
-        }
-        .movie-details p {
-            color: #ccc;
-            font-size: 1rem;
-        }
-        .sessions-list {
-            margin-top: 40px;
-        }
-        .session-card {
-            background: #1a1a1a;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-        }
-        .session-card:hover {
-            background: #232323;
-            box-shadow: 0 3px 12px rgba(255,123,0,0.3);
-        }
-        .btn-orange {
-            background-color: #ff7b00;
-            color: white;
-            border: none;
-            transition: background-color 0.3s;
-        }
-        .btn-orange:hover {
-            background-color: #e46a00;
-        }
-        footer {
-            background: #111;
-            color: #999;
-            text-align: center;
-            padding: 20px;
-            margin-top: 60px;
-            border-top: 1px solid #222;
-        }
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', Arial, sans-serif;
+    min-height: 100vh;
+}
+
+/* ── Movie header ── */
+.movie-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 36px;
+    margin: 48px 0 40px;
+}
+
+.movie-header img {
+    width: 220px;
+    height: 330px;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(255,111,0,.35);
+    flex-shrink: 0;
+}
+
+.movie-details {
+    flex: 1;
+    min-width: 240px;
+}
+
+.movie-details h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text);
+    letter-spacing: 2px;
+    margin: 0 0 6px;
+    line-height: 1;
+}
+
+.movie-details .movie-genre {
+    display: inline-block;
+    background: rgba(255,111,0,.12);
+    color: var(--orange);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 18px;
+}
+
+.movie-details p {
+    color: #aaa;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    max-width: 620px;
+}
+
+.movie-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.movie-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.movie-meta-item .meta-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.movie-meta-item .meta-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* ── Sessions ── */
+.sessions-list { margin-top: 48px; }
+
+.sessions-list h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+.session-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 22px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+
+.session-card:hover {
+    border-color: var(--orange);
+    box-shadow: 0 4px 20px rgba(255,111,0,.15);
+    transform: translateX(4px);
+}
+
+.session-card .session-time {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    color: var(--orange);
+}
+
+.session-card .session-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.session-card .session-hall {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: .5px;
+}
+
+.session-card .session-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* ── Buttons ── */
+.btn-orange {
+    background: var(--orange) !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 600 !important;
+    border-radius: 7px !important;
+    padding: 9px 22px !important;
+    transition: background .2s, transform .15s !important;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-orange:hover {
+    background: var(--orange-dim) !important;
+    color: #fff !important;
+    transform: scale(1.03) !important;
+}
+
+/* ── Back link ── */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color .2s;
+    margin-bottom: 8px;
+}
+.btn-back:hover { color: var(--orange); }
+
+/* ── Footer ── */
+footer {
+    background: #111;
+    color: var(--muted);
+    text-align: center;
+    padding: 22px;
+    margin-top: 60px;
+    border-top: 1px solid var(--border);
+    font-size: 0.84rem;
+}
