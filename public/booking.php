@@ -61,7 +61,7 @@ $premiumPrice = round($basePrice * 1.20, 2);
 <?php include '../includes/header.php'; ?>
 
 <div class="container booking-container py-5">
-    <a href="movie.php?id=<?= (int)$session['movie_id'] ?>" class="btn-back mb-4 d-inline-flex">← Back</a>
+    <a href="movie.php?id=<?= (int)$session['movie_id'] ?>" class="btn btn-warning mb-4">← Back</a>
     <h1 class="text-orange mb-1">Select Seats</h1>
 
     <div class="summary-box mb-4">
